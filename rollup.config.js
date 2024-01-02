@@ -1,15 +1,30 @@
-import { terser } from 'rollup-plugin-terser';
-import typescript from '@rollup/plugin-typescript';
+import terser from '@rollup/plugin-terser'
+import typescript from '@rollup/plugin-typescript'
+import { dts } from 'rollup-plugin-dts'
 
-export default {
-  input: 'src/index.ts',
-  output: [{
-    file: 'dist/cjs/index.js',
-    format: 'cjs'
+export default [
+  {
+    input: 'src/index.ts',
+    output: [
+      {
+        file: 'dist/cjs/index.js',
+        format: 'cjs',
+      },
+      {
+        file: 'dist/esm/index.js',
+        format: 'esm',
+      },
+    ],
+    plugins: [typescript(), terser()],
   },
   {
-    file: 'dist/esm/index.js',
-    format: 'esm'
-  }],
-  plugins: [typescript(),terser()]
-};
+    input: 'dist/esm/index.d.ts',
+    output: [
+      {
+        file: 'dist/index.d.ts',
+        format: 'esm',
+      },
+    ],
+    plugins: [dts()],
+  },
+]
