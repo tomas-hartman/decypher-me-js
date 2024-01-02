@@ -1,185 +1,190 @@
 export class DecypherMe {
-  constructor(obj){
-    this._cypheringTable = obj.cypheringTable || null;
-    this._stringToEncode = obj.toEncode || null;   // zakódovat -- mám vlastní tabulku, nebo vygenerovat novou tabulku
-    this._stringToDecode = obj.toDecode || null;   // odkódovat -- potřebuje tabulku
-    this._getTable = obj.returnTable; // když je cyphering table null; zakódovat i odkódovat
-    this.outputBase = parseInt(obj.outputBase) || 5;
-    this.alphabet = 'abcdefghijklmnoprstuvwyxz'.split('');
+  constructor(obj) {
+    this._cypheringTable = obj.cypheringTable || null
+    this._stringToEncode = obj.toEncode || null // zakódovat -- mám vlastní tabulku, nebo vygenerovat novou tabulku
+    this._stringToDecode = obj.toDecode || null // odkódovat -- potřebuje tabulku
+    this._getTable = obj.returnTable // když je cyphering table null; zakódovat i odkódovat
+    this.outputBase = parseInt(obj.outputBase) || 5
+    this.alphabet = 'abcdefghijklmnoprstuvwyxz'.split('')
   }
 
   get stringToEncode() {
-    if(this._stringToEncode) return this.prepareInput(this._stringToEncode);
+    if (this._stringToEncode) return this.prepareInput(this._stringToEncode)
   }
-    
+
   get stringToDecode() {
-    return this._stringToDecode;
+    return this._stringToDecode
   }
 
   get cypheringTable() {
-    const table = this._cypheringTable;
-    const checkInsideArrays = array => {
-      return array.length === 5;
-    };
-
-    if(!table){
-      return this.createCypheringTable(); 
+    const table = this._cypheringTable
+    const checkInsideArrays = (array) => {
+      return array.length === 5
     }
 
-    if(table && Array.isArray(table) && table.length === 5 && table.every(checkInsideArrays)){
-      return table;
+    if (!table) {
+      return this.createCypheringTable()
     }
 
-    throw 'Inserted table is corrupt, check if the table is 5x5 and contains 25 characters.'; 
-        
+    if (
+      table &&
+      Array.isArray(table) &&
+      table.length === 5 &&
+      table.every(checkInsideArrays)
+    ) {
+      return table
+    }
+
+    throw 'Inserted table is corrupt, check if the table is 5x5 and contains 25 characters.'
   }
 
   get getTable() {
-    if(this._getTable && typeof this._getTable === 'boolean'){
-      return this._getTable;
+    if (this._getTable && typeof this._getTable === 'boolean') {
+      return this._getTable
     }
   }
 
   prepareInput = (string) => {
-    string = string.toLowerCase();
-    string = string.replace(/\W/g, '');
+    string = string.toLowerCase()
+    string = string.replace(/\W/g, '')
 
-    return string;
-  };
+    return string
+  }
 
   prepareOutput = (string) => {
-    const outputBase = this.outputBase;
-    let output = '';
-    let slicer = this.outputBase;
-    let strStart = 0;
+    const outputBase = this.outputBase
+    let output = ''
+    let slicer = this.outputBase
+    let strStart = 0
 
-    if(string.length % outputBase !== 0){
-      console.error('String cannot be divided by '+outputBase+'.');
-      return;
-    } 
-
-    for(let i=0; i<string.length/outputBase; i++){
-      let remainingString = string.slice(slicer);
-      output += string.slice(strStart, slicer);
-      output += ' ';
-
-      slicer = slicer + outputBase;
-      strStart = strStart + outputBase;
+    if (string.length % outputBase !== 0) {
+      console.error('String cannot be divided by ' + outputBase + '.')
+      return
     }
 
-    output = output.trim();
-    output = output.toUpperCase();
-        
-    return output;
-  };
+    for (let i = 0; i < string.length / outputBase; i++) {
+      let remainingString = string.slice(slicer)
+      output += string.slice(strStart, slicer)
+      output += ' '
+
+      slicer = slicer + outputBase
+      strStart = strStart + outputBase
+    }
+
+    output = output.trim()
+    output = output.toUpperCase()
+
+    return output
+  }
 
   createCypheringTable = () => {
-    const workingTable = [];
-    const alphabet = this.alphabet;
+    const workingTable = []
+    const alphabet = this.alphabet
 
-    for(let i=0; i<5; i++){
-      let array = [];
-      for(let y=0; y<5; y++){
-        let rand = Math.floor(Math.random()*alphabet.length);
-        let letter = alphabet.splice(rand,1).toString();
-        array.push(letter);
+    for (let i = 0; i < 5; i++) {
+      let array = []
+      for (let y = 0; y < 5; y++) {
+        let rand = Math.floor(Math.random() * alphabet.length)
+        let letter = alphabet.splice(rand, 1).toString()
+        array.push(letter)
       }
-      workingTable.push(array);
+      workingTable.push(array)
     }
 
-    return workingTable;
-  };
+    return workingTable
+  }
 
   encodeToNums = (stringToEncode, decypheringTable) => {
-    const string = this.prepareInput(stringToEncode); 
-    let output = '';
-    let workingString = string.split('');
+    const string = this.prepareInput(stringToEncode)
+    let output = ''
+    let workingString = string.split('')
 
     // iteration over letters
-    for(let i=0; i<workingString.length; i++){ 
+    for (let i = 0; i < workingString.length; i++) {
       // finding index of the letter
-      for(let y=0; y<5; y++){
-        if(decypheringTable[ y ].indexOf(workingString[ i ]) < 0 ) continue;
-        output += decypheringTable[ y ].indexOf(workingString[ i ]);
-        output += y;
+      for (let y = 0; y < 5; y++) {
+        if (decypheringTable[y].indexOf(workingString[i]) < 0) continue
+        output += decypheringTable[y].indexOf(workingString[i])
+        output += y
       }
     }
 
-    return output;
-  };
+    return output
+  }
 
   encodeToLetters = (stringToEncode, decypheringTable) => {
-    let output = '';
-    const workingString = stringToEncode.split('');
-    const iterationLength = workingString.length;
+    let output = ''
+    const workingString = stringToEncode.split('')
+    const iterationLength = workingString.length
 
-    for(let i=0; i<iterationLength/2; i++){
-      let coord1 = workingString.shift();
-      let coord2 = workingString.shift();
-      output += decypheringTable[ coord2 ][ coord1 ];
+    for (let i = 0; i < iterationLength / 2; i++) {
+      let coord1 = workingString.shift()
+      let coord2 = workingString.shift()
+      output += decypheringTable[coord2][coord1]
     }
 
-    return output;
-  };
+    return output
+  }
 
   /**
    * @todo work on some formatting and render output at clusters of 5
-   * @param {string} stringToEncode 
-   * @param {array} decypheringTable 
+   * @param {string} stringToEncode
+   * @param {array} decypheringTable
    */
   encode = (stringToEncode, decypheringTable) => {
-    const first = this.encodeToNums(stringToEncode, decypheringTable);
-    let workingSecond = (Math.floor(Math.random()*5)).toString();
-    workingSecond += first;
-    workingSecond += (Math.floor(Math.random()*5)).toString();
+    const first = this.encodeToNums(stringToEncode, decypheringTable)
+    let workingSecond = Math.floor(Math.random() * 5).toString()
+    workingSecond += first
+    workingSecond += Math.floor(Math.random() * 5).toString()
 
-    if(workingSecond.length % this.outputBase !== 0){
+    if (workingSecond.length % this.outputBase !== 0) {
       // const iterations = 6-(workingSecond.length % 6);
-      // Compensates number of letters, so they are dividable by 6 / outputBase 
-      const iterations = (this.outputBase -(workingSecond.length / 2) % this.outputBase) * 2;
-      for(let i=0; i<iterations; i++){
-        workingSecond += (Math.floor(Math.random()*5)).toString();
+      // Compensates number of letters, so they are dividable by 6 / outputBase
+      const iterations =
+        (this.outputBase - ((workingSecond.length / 2) % this.outputBase)) * 2
+      for (let i = 0; i < iterations; i++) {
+        workingSecond += Math.floor(Math.random() * 5).toString()
       }
     }
 
-    let output = this.encodeToLetters(workingSecond, decypheringTable);
+    let output = this.encodeToLetters(workingSecond, decypheringTable)
 
-    output = this.prepareOutput(output);
+    output = this.prepareOutput(output)
 
-    return output;
-  };
+    return output
+  }
 
   decode = (stringToDecode, decypheringTable) => {
-    const string = stringToDecode.replace(/\s/g, '');
-    string.toLowerCase();
-    const first = this.encodeToNums(string, decypheringTable);
-    let workingSecond = first.slice(1,first.length-1);
-    const second = this.encodeToLetters(workingSecond, decypheringTable);
+    const string = stringToDecode.replace(/\s/g, '')
+    string.toLowerCase()
+    const first = this.encodeToNums(string, decypheringTable)
+    let workingSecond = first.slice(1, first.length - 1)
+    const second = this.encodeToLetters(workingSecond, decypheringTable)
 
-    return second;
-  };
+    return second
+  }
 
   /**
-     * Variables come in play here - I'll decide which process should be run here.
-     */
+   * Variables come in play here - I'll decide which process should be run here.
+   */
   run = () => {
-    const output = {};
-    if(this.getTable){
-      output.table = this.cypheringTable;
+    const output = {}
+    if (this.getTable) {
+      output.table = this.cypheringTable
     }
 
-    if(this.stringToEncode && !this.stringToDecode){
-      output.encoded = this.encode(this.stringToEncode, this.cypheringTable);
-    }
-        
-    if(!this.stringToEncode && this.stringToDecode){
-      output.decoded = this.decode(this.stringToDecode, this.cypheringTable); 
+    if (this.stringToEncode && !this.stringToDecode) {
+      output.encoded = this.encode(this.stringToEncode, this.cypheringTable)
     }
 
-    if(this.stringToEncode && this.stringToDecode){
-      throw 'Input either string to encode or to decode.';
+    if (!this.stringToEncode && this.stringToDecode) {
+      output.decoded = this.decode(this.stringToDecode, this.cypheringTable)
     }
 
-    return output;
-  };
+    if (this.stringToEncode && this.stringToDecode) {
+      throw 'Input either string to encode or to decode.'
+    }
+
+    return output
+  }
 }

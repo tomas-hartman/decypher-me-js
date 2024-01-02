@@ -1,24 +1,23 @@
-import { CreateTable } from './types';
+import { CreateTable } from './types'
 
 export const createTable: CreateTable = () => {
-  const workingTable = [];
+  const workingTable = []
 
   // TODO: generate own alphabet from input
-  const alphabet = 'abcdefghijklmnoprstuvwyxz'.split('');
+  const alphabet = 'abcdefghijklmnoprstuvwyxz'.split('')
 
-  for(let i=0; i<5; i++){
+  for (let i = 0; i < 5; i++) {
+    const array = []
 
-    const array = [];
+    for (let y = 0; y < 5; y++) {
+      const rand = Math.floor(Math.random() * alphabet.length)
+      const letter = alphabet.splice(rand, 1).toString()
 
-    for(let y=0; y<5; y++){
-      const rand = Math.floor(Math.random() * alphabet.length);
-      const letter = alphabet.splice(rand,1).toString();
-      
-      array.push(letter);
+      array.push(letter)
     }
 
-    workingTable.push(array);
+    workingTable.push(array)
   }
 
-  return workingTable;
-};
+  return workingTable
+}
