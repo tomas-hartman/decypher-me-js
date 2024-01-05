@@ -1,6 +1,11 @@
 import { createTable } from '../src/createTable'
 
-const testTable = createTable()
+test('createTable returns a 5x5 table', () => {
+  const testTable = createTable()
 
-console.log(testTable)
-console.log(new Set(testTable.flat()).size)
+  expect(testTable).toHaveLength(5)
+
+  testTable.forEach((row) => {
+    expect(row).toHaveLength(5)
+  })
+})

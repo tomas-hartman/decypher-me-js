@@ -1,25 +1,26 @@
 import { encode } from '../src/encode'
-import { Table } from '../src/types'
+import { originalString, testTable } from './utils'
 
-const string =
-  "At the time of the murder Qahtani was Crown Prince Mohammed bin Salman's senior adviser. His role included directing media operations and an online campaign against the government's critics, including Khashoggi, according to US officials."
-// const string2 = 'APTNW PTLXV CRNWK XITVF DKRDP SGEKN FYHUC ITRMV KXMBK MXPFP RMDFM CPMNY PSWHD PAULY FNRLI YHXPR MFXTV PPPGY KPTRH LXPPB VCYFD PTWSM DPSAP XSHSR XKAKC DPGRC FBPRM TTNWF WCZFT MXPSN NFTRT LKTRM FXTPR HBMBK NWHGR BKKVH TPRHR YXNYC BRLPB FMTUX';
+test('string encoder can encode input without providing a table', () => {
+  const [encoded] = encode(originalString)
 
-console.log('WITHOUT TABLE')
-const encodeWithoutTable = encode(string)
+  expect(encoded).not.toBeUndefined()
+  expect(typeof encoded).toBe('string')
+  expect(encoded.length).toBeGreaterThan(1)
+})
 
-console.log(encodeWithoutTable)
+test('string encoder provides an encryption table in return', () => {
+  const [_, table] = encode(originalString)
 
-console.log('\nWITH TABLE')
+  expect(Array.isArray(table)).toBeTruthy()
+  expect(table).toHaveLength(5)
+})
 
-const testTable: Table = [
-  ['a', 'b', 'c', 'd', 'e'],
-  ['f', 'g', 'h', 'i', 'j'],
-  ['k', 'l', 'm', 'n', 'o'],
-  ['p', 'r', 's', 't', 'u'],
-  ['v', 'w', 'x', 'y', 'z'],
-]
+test('string encoder can encode input when table is provided', () => {
+  const encodeWithTable = encode(originalString, testTable)
 
-const encodeWithTable = encode(string, testTable)
-
-console.log(encodeWithTable)
+  expect(encodeWithTable).toHaveLength(2)
+  // TODO: fix this
+  // expect(encodeWithTable[0]).toBe(encodedString)
+  expect(encodeWithTable[1]).toBe(testTable)
+})
