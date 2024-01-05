@@ -24,3 +24,13 @@ test('string encoder can encode input when table is provided', () => {
   // expect(encodeWithTable[0]).toBe(encodedString)
   expect(encodeWithTable[1]).toBe(testTable)
 })
+
+test('string encoder has configurable outputBase', () => {
+  const testOutputBase = 16
+
+  const [encoded] = encode(originalString, undefined, testOutputBase)
+
+  encoded.split(' ').forEach((segment) => {
+    expect(segment).toHaveLength(testOutputBase)
+  })
+})

@@ -8,7 +8,7 @@ export const cleanOutput = (string: string, outputBase: number) => {
   }
 
   for (let i = 0; i < string.length / outputBase; i++) {
-    const remainingString = string.slice(slicer)
+    string.slice(slicer)
     output += string.slice(strStart, slicer)
     output += ' '
 

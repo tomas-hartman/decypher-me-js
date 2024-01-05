@@ -1,13 +1,13 @@
 import { convertToChars } from './convertToChars'
 import { convertToNums } from './convertToNums'
-import { Decode } from './types'
+import { Table } from './types'
 
-export const decode: Decode = (stringToDecode, decypheringTable) => {
+export const decode = (stringToDecode: string, decypheringTable: Table) => {
   const string = stringToDecode.replace(/\s/g, '').toLowerCase()
 
-  const first = convertToNums(string, decypheringTable)
-  const workingSecond = first.slice(1, first.length - 1)
-  const second = convertToChars(workingSecond, decypheringTable)
+  const firstTransform = convertToNums(string, decypheringTable)
+  const workingSecond = firstTransform.slice(1, firstTransform.length - 1)
+  const secondTransform = convertToChars(workingSecond, decypheringTable)
 
-  return second
+  return secondTransform
 }

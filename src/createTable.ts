@@ -1,6 +1,6 @@
-import { CreateTable } from './types'
+import { Table } from './types'
 
-export const createTable: CreateTable = () => {
+export const createTable = (): Table => {
   const workingTable = []
 
   // TODO: generate own alphabet from input
