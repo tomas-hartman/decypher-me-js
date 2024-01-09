@@ -1,3 +1,4 @@
+import { cleanInput } from './cleanInput'
 import { cleanOutput } from './cleanOutput'
 import { convertToChars } from './convertToChars'
 import { convertToNums } from './convertToNums'
@@ -12,7 +13,10 @@ export const encode = (
   outputBase = 5,
 ) => {
   const workingTable = decypheringTable || createTable()
-  const firstTransform = convertToNums(stringToEncode, workingTable)
+
+  const cleanStringToEncode = cleanInput(stringToEncode)
+
+  const firstTransform = convertToNums(cleanStringToEncode, workingTable)
 
   let firstTransformWithSalt = getRandomInt() + firstTransform + getRandomInt()
 

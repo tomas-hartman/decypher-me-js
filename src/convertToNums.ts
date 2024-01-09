@@ -1,10 +1,11 @@
-import { cleanInput } from './cleanInput'
+import { removeWhitespace } from './cleanInput'
 import { Table } from './types'
 
 export const convertToNums = (input: string, table: Table) => {
-  const string = cleanInput(input)
+  const cleanedInput = removeWhitespace(input)
+
   let output = ''
-  const workingString = string.split('')
+  const workingString = cleanedInput.split('')
 
   // iteration over letters
   for (let i = 0; i < workingString.length; i++) {
